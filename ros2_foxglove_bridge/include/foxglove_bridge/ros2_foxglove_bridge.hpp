@@ -8,6 +8,7 @@
 
 #include <rclcpp/rclcpp.hpp>
 #include <rosgraph_msgs/msg/clock.hpp>
+#include <std_msgs/msg/string.hpp>
 #include <rosx_introspection/ros_parser.hpp>
 #include <websocketpp/common/connection_hdl.hpp>
 
@@ -57,6 +58,7 @@ private:
     }
   };
 
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr _no_con_publisher;
   std::unique_ptr<foxglove::ServerInterface<ConnectionHandle>> _server;
   foxglove::MessageDefinitionCache _messageDefinitionCache;
   std::vector<std::regex> _topicWhitelistPatterns;

@@ -52,6 +52,9 @@ FoxgloveBridge::FoxgloveBridge(const rclcpp::NodeOptions& options)
   const auto assetUriAllowlist = this->get_parameter(PARAM_ASSET_URI_ALLOWLIST).as_string_array();
   _assetUriAllowlistPatterns = parseRegexStrings(this, assetUriAllowlist);
   _disableLoanMessage = this->get_parameter(PARAM_DISABLE_LOAN_MESSAGE).as_bool();
+  const auto no_con_topic = this->get_parameter(PARAM_NO_CON_TOPIC).as_string();
+
+  _no_con_publisher = this->create_publisher<std_msgs::msg::String>(no_con_topic, 10);
 
   const auto logHandler = std::bind(&FoxgloveBridge::logHandler, this, _1, _2);
   // Fetching of assets may be blocking, hence we fetch them in a separate thread.
@@ -580,6 +583,16 @@ void FoxgloveBridge::unsubscribe(foxglove::ChannelId channelId, ConnectionHandle
     RCLCPP_INFO(this->get_logger(),
                 "Removed one subscription from channel %d (%zu subscription(s) left)", channelId,
                 subscriptionsByClient.size());
+  }
+
+  if (_server->getNumOfConnections() == 0)
+  {
+    RCLCPP_ERROR(this->get_logger(), "No connection left in websocket. So closing it.. ");
+    // send message to foxglove_cmd topic
+    // Publish a false message to /LB/foxglove_cmd
+    auto message = std_msgs::msg::String();
+    message.data = "0";
+    _no_con_publisher->publish(message);
   }
 }
 

@@ -144,6 +144,7 @@ public:
   void sendMessage(ConnHandle clientHandle, ChannelId chanId, uint64_t timestamp,
                    const uint8_t* payload, size_t payloadSize) override;
   void broadcastTime(uint64_t timestamp) override;
+  uint16_t getNumOfConnections();
   void sendServiceResponse(ConnHandle clientHandle, const ServiceResponse& response) override;
   void sendServiceFailure(ConnHandle clientHandle, ServiceId serviceId, uint32_t callId,
                           const std::string& message) override;
@@ -437,6 +438,13 @@ inline void Server<ServerConfiguration>::handleConnectionClosed(ConnHandle hdl) 
   }
 
 }  // namespace foxglove
+
+template <typename ServerConfiguration>
+inline uint16_t Server<ServerConfiguration>::getNumOfConnections() {
+  // Check if there are no clients left
+  std::unique_lock<std::shared_mutex> lock(_clientsMutex);
+  return _clients.size();
+}
 
 template <typename ServerConfiguration>
 inline void Server<ServerConfiguration>::setHandlers(ServerHandlers<ConnHandle>&& handlers) {

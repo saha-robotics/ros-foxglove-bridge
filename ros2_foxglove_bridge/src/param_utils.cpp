@@ -167,6 +167,14 @@ void declareParameters(rclcpp::Node* node) {
       {"^package://(?:\\w+/"
        ")*\\w+\\.(?:dae|fbx|glb|gltf|jpeg|jpg|mtl|obj|png|stl|tif|tiff|urdf|webp|xacro)$"}),
     paramWhiteListDescription);
+
+  auto noConTopicDescription = rcl_interfaces::msg::ParameterDescriptor{};
+  noConTopicDescription.name = PARAM_NO_CON_TOPIC;
+  noConTopicDescription.type = rcl_interfaces::msg::ParameterType::PARAMETER_STRING;
+  noConTopicDescription.description = "The topic that will node send message when there is no conencted client";
+  noConTopicDescription.read_only = false;
+  node->declare_parameter(PARAM_NO_CON_TOPIC, "no_con_topic", noConTopicDescription);
+
 }
 
 std::vector<std::regex> parseRegexStrings(rclcpp::Node* node,

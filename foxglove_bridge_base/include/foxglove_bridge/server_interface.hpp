@@ -97,6 +97,7 @@ public:
   virtual void sendMessage(ConnectionHandle clientHandle, ChannelId chanId, uint64_t timestamp,
                            const uint8_t* payload, size_t payloadSize) = 0;
   virtual void broadcastTime(uint64_t timestamp) = 0;
+  virtual uint16_t getNumOfConnections() = 0;
   virtual void sendServiceResponse(ConnectionHandle clientHandle,
                                    const ServiceResponse& response) = 0;
   virtual void sendServiceFailure(ConnectionHandle clientHandle, ServiceId serviceId,

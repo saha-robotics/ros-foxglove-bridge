@@ -47,6 +47,7 @@
 
     <depend>resource_retriever</depend>
     <depend>rosgraph_msgs</depend>
+    <depend>std_msgs</depend>
 
     <!-- The export tag contains other, unspecified, tags -->
     <export>
